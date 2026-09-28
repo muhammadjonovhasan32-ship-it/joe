@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
@@ -29,18 +29,9 @@ def get_client() -> OpenAI:
     return OpenAI(api_key=api_key)
 
 
-@app.get("/", response_class=HTMLResponse)
-def home() -> str:
-    return """
-    <!doctype html>
-    <html lang="uz">
-      <head><meta charset="utf-8"><title>Joe AI</title></head>
-      <body>
-        <h1>Joe AI</h1>
-        <p>API ishlayapti. Interaktiv hujjatlar: <a href="/docs">/docs</a></p>
-      </body>
-    </html>
-    """
+@app.get("/", include_in_schema=False)
+def home() -> FileResponse:
+    return FileResponse("static/index.html")
 
 
 @app.get("/health")
